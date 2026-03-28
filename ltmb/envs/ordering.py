@@ -2,7 +2,6 @@ from __future__ import annotations
 
 import numpy as np
 import itertools
-import random
 
 from minigrid.core.actions import Actions
 from minigrid.core.constants import COLOR_NAMES, TILE_PIXELS
@@ -17,7 +16,6 @@ class OrderingEnv(MiniGridEnv):
         self.length = length # number of commands
         max_steps = 18 + length
         self.tile_size = tile_size # size of tiles in pixels
-        random.seed(int(self._rand_int(0, 10**9)))
         self.permutation = list(itertools.product([Ball, Key, Box], COLOR_NAMES))
         self.timestep = 0
         self.choices = []
@@ -45,7 +43,8 @@ class OrderingEnv(MiniGridEnv):
             self.grid.set(3, 3, object(color))
         else:
             self.grid.set(3, 3, None)
-            self.choices = random.sample(self.permutation, 2)
+            idxs = self.np_random.choice(len(self.permutation), size=2, replace=False)
+            self.choices = [self.permutation[i] for i in idxs]
             self.grid.set(2, 3, self.choices[0][0](self.choices[0][1]))
             self.grid.set(4, 3, self.choices[1][0](self.choices[1][1]))
 
@@ -58,7 +57,7 @@ class OrderingEnv(MiniGridEnv):
         self.agent_dir = 3 # facing up
 
         # generate a permutation of all possible objects and colors
-        random.shuffle(self.permutation)
+        self.np_random.shuffle(self.permutation)
 
         self.timestep = 0
         self._gen_new_room()

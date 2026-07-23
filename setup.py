@@ -11,7 +11,7 @@ setup(
     url='https://github.com/WilliamYue37/LTMB',
     packages=find_packages(),
     install_requires=[
-        'minigrid==2.3.1',
+        'minigrid==3.1.0',
     ],
     python_requires='>=3.7',
     classifiers=[
